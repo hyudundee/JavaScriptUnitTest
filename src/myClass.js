@@ -8,6 +8,15 @@ class MyClass {
     ret = arg1 + arg2;
     return ret;
   }
+
+  callAnotherFn(arg1, arg2) {
+    const ret = this.add(arg1, arg2);
+    return ret;
+  }
+
+  callTheCallback(callback) {
+    callback();
+  }
 }
 
 module.exports = MyClass;
