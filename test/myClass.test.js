@@ -3,6 +3,9 @@ const chai = require("chai");
 const sinon = require("sinon")
 const { expect } = chai;
 
+const chaiaspromise = require("chai-as-promised");
+chai.use(chaiaspromise);
+
 const myObj = new MyClass();
 
 // skip this test suite
@@ -45,7 +48,7 @@ describe.skip("Test Unit", function() {
 })
 
 // create new test suite for stub
-describe("Test suite for stub", function() {
+describe.skip("Test suite for stub", function() {
   it("Stub the add method", function() {
     const stub = sinon.stub(myObj, "add");
     stub
@@ -56,5 +59,25 @@ describe("Test suite for stub", function() {
       .returns(200); // when add() was called with 10, 20 we assume it will returns 100
     expect(myObj.callAnotherFn(10, 20)).to.be.equal(100);
     expect(myObj.callAnotherFn(10, 20)).to.be.equal(200);
+  })
+})
+
+// this could be shortened with chai library
+describe.skip("Test the promise", function() {
+  it("Promise test case", function(done) {
+    this.timeout(5000);
+    // this.timeout(0); // this means keep waiting util the promise got resolved or rejected
+    myObj.testPromise().then(function(result) {
+      expect(result).to.be.equal(6);
+      expect(false).to.be.false;
+      done();
+    });
+  })
+})
+
+describe("Test the promise", function() {
+  it("Promise test case", function() {
+    this.timeout(0);
+    return expect(myObj.testPromise()).to.eventually.equal(6);
   })
 })
