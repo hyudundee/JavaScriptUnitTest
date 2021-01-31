@@ -10,7 +10,23 @@ const nock = require("nock");
 const myObj = new MyClass();
 
 // skip this test suite
-describe.skip("Test Unit", function() {
+describe("Test Unit", function() {
+  after(function() {
+    console.log("------- After the test suit -------");
+  })
+
+  before(function() {
+    console.log("------- Before the test suit -------");
+  })
+  
+  afterEach(function() {
+    sinon.restore();
+    // console.log("------- After each test case -------");
+  })
+
+  // beforeEach(function() {
+  //   console.log("------- Before each test suit -------");
+  // })
   it("Test the add method", function() {
     // expect is prefered for readability
     expect(myObj.add(1, 2)).to.be.equal(3);
@@ -28,6 +44,17 @@ describe.skip("Test Unit", function() {
     expect(spy.calledWith(arg1, arg2)).to.be.true;
   })
 
+  it("spy the add method", function() {
+    const spy = sinon.spy(myObj, "add");
+    const arg1 = 10, arg2 = 20;
+    myObj.callAnotherFn(arg1, arg2);
+    // sinon.assert.calledOnce(spy);
+    expect(spy.calledOnce).to.be.true;
+    expect(spy.calledTwice).to.be.false;
+    expect(spy.calledWith(arg1, arg2)).to.be.true;
+  })
+
+  /** Spy a function (creating a wrapper around it) */
   // passing spy object in
   it("spy the callback method", function() {
     const callback = sinon.spy();
