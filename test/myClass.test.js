@@ -5,6 +5,7 @@ const { expect } = chai;
 
 const chaiaspromise = require("chai-as-promised");
 chai.use(chaiaspromise);
+const nock = require("nock");
 
 const myObj = new MyClass();
 
@@ -47,6 +48,8 @@ describe.skip("Test Unit", function() {
   })
 })
 
+/** --------------- Test stub functions ---------------- */
+
 // create new test suite for stub
 describe.skip("Test suite for stub", function() {
   it("Stub the add method", function() {
@@ -62,6 +65,9 @@ describe.skip("Test suite for stub", function() {
   })
 })
 
+
+/** --------------- Test promises ---------------- */
+
 // this could be shortened with chai library
 describe.skip("Test the promise", function() {
   it("Promise test case", function(done) {
@@ -75,9 +81,21 @@ describe.skip("Test the promise", function() {
   })
 })
 
-describe("Test the promise", function() {
-  it("Promise test case", function() {
+/** --------------- Stub Xhr calls ---------------- */
+
+describe("XHR test suit", function() {
+  it("Mock and stub xhr call", function(done) {
     this.timeout(0);
-    return expect(myObj.testPromise()).to.eventually.equal(6);
+    // add interceptor to avoid actual api call
+    const scope = nock("https://echo-service-new.herokuapp.com")
+      .post("/echo")
+      .reply(200, { id: 123 });
+    myObj.xhrFn().then(function(result) {
+      console.log(result);
+      // expect(result).to.be.equal({ id: 123 });
+      done();
+    }).catch(error => {
+      done(new Error("Test case failed"));
+    })
   })
 })

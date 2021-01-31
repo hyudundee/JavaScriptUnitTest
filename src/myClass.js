@@ -1,3 +1,5 @@
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 class MyClass {
   constructor () {
     console.log("initiate");
@@ -29,6 +31,28 @@ class MyClass {
 
   callTheCallback(callback) {
     callback();
+  }
+
+  xhrFn() {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("post", "https://echo-service-new.herokuapp.com/echo", true);
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(xhr.status);
+          }
+        }
+      };
+      xhr.send();
+    })
+      .then(function(result) {
+        return result;
+      })
+      .catch(error => error);
   }
 }
 
