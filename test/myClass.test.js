@@ -5,7 +5,8 @@ const { expect } = chai;
 
 const myObj = new MyClass();
 
-describe("Test Unit", function() {
+// skip this test suite
+describe.skip("Test Unit", function() {
   it("Test the add method", function() {
     // expect is prefered for readability
     expect(myObj.add(1, 2)).to.be.equal(3);
@@ -43,3 +44,17 @@ describe("Test Unit", function() {
   })
 })
 
+// create new test suite for stub
+describe("Test suite for stub", function() {
+  it("Stub the add method", function() {
+    const stub = sinon.stub(myObj, "add");
+    stub
+      .withArgs(10, 20)
+      .onFirstCall()
+      .returns(100)
+      .onSecondCall()
+      .returns(200); // when add() was called with 10, 20 we assume it will returns 100
+    expect(myObj.callAnotherFn(10, 20)).to.be.equal(100);
+    expect(myObj.callAnotherFn(10, 20)).to.be.equal(200);
+  })
+})
